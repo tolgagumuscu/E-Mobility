@@ -1,0 +1,405 @@
+classdef TERMPROJECT4 < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure                       matlab.ui.Figure
+        CalculateEVChargingStationDataButton  matlab.ui.control.Button
+        EE101TermProject4Label         matlab.ui.control.Label
+        GumuscuConsultancyAgencyLabel  matlab.ui.control.Label
+        Image                          matlab.ui.control.Image
+        UIAxes                         matlab.ui.control.UIAxes
+        UIAxes_2                       matlab.ui.control.UIAxes
+        UIAxes_3                       matlab.ui.control.UIAxes
+        UIAxes_4                       matlab.ui.control.UIAxes
+        UIAxes_5                       matlab.ui.control.UIAxes
+    end
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Button pushed function: 
+        % CalculateEVChargingStationDataButton
+        function CalculateEVChargingStationDataButtonPushed(app, event)
+            %COLUMN1_SOC
+            %COLUMN2_BRAND_ID
+            %COLUMN3_TOA_HOUR
+            %COLUMN4_TOA_MINUTE
+            %COLUMN5_TOD_HOUR
+            %COLUMN6_TOD_MINUTE
+            %COLUMN7_CHARGE_DECISION
+            %COLUMN8_EMPTY_CAPACITY
+            %COLUMN9_CHARGE_DURATION
+            %COLUMN10_CHARGE_PRICE
+            %COLUMN11_AVERAGE_REVENUE_FROM_1_TO_20_CHARGING_STATIONS
+                     
+            %creating the dataset
+            vehicle_num = 1000;
+            
+            datasheet = zeros(vehicle_num,5);
+            
+            %column 1 SOC
+            for i = 1:vehicle_num
+                datasheet(i,1) = betarnd(2,4) * 100;
+            end
+            %column2 Brand ID
+            %1)Tesla
+            %2)Renault
+            %3)Mercedes
+            %4)BMW
+            for i = 1:vehicle_num
+                x = rand();
+                if x<=0.1 % 0.1 Tesla
+                    datasheet(i,2) = 1;
+                elseif x<=0.6 % 0.5 Renault
+                    datasheet(i,2) = 2;
+                elseif x<=0.75 % 0.25 Mercedes
+                    datasheet(i,2) = 3;
+                else % rest is BMW
+                    datasheet(i,2) = 4;             
+                end
+            end
+            
+            %column3 TOA Hour
+            for i=1:vehicle_num
+                x = rand();%TOA
+                y = rand();%TOD, has to be bigger
+                while y < x
+                    y = rand()+0.09;%TOD
+                end
+                
+                %Shopping Mall opens at 10AM to 11PM
+                %TOA Operations
+                if x<=1/12
+                    hour = 10;
+                    datasheet(i,3) = hour;
+                elseif x<=2/12
+                    hour = 11;
+                    datasheet(i,3) = hour;
+                elseif x<=3/12
+                    hour = 12;
+                    datasheet(i,3) = hour;
+                elseif x<=4/12
+                    hour = 13;
+                    datasheet(i,3) = hour;   
+                elseif x<=5/12
+                    hour = 14;
+                    datasheet(i,3) = hour;
+                elseif x<=6/12
+                    hour = 15;
+                    datasheet(i,3) = hour;
+                elseif x<=7/12
+                    hour = 16;
+                    datasheet(i,3) = hour;
+                elseif x<=8/12
+                    hour = 17;
+                    datasheet(i,3) = hour;
+                elseif x<=9/12
+                    hour = 18;
+                    datasheet(i,3) = hour;
+                elseif x<=10/12
+                    hour = 19;
+                    datasheet(i,3) = hour;
+                elseif x<=11/12
+                    hour = 20;
+                    datasheet(i,3) = hour;
+                else
+                    hour = 21;
+                    datasheet(i,3) = hour;
+                    y = x;
+                end
+                %TOD Operation
+                if y<=1/12
+                    hour = 10;
+                    datasheet(i,5) = hour;
+                elseif y<=2/12
+                    hour = 11;
+                    datasheet(i,5) = hour;
+                elseif y<=3/12
+                    hour = 12;
+                    datasheet(i,5) = hour;
+                elseif x<=4/12
+                    hour = 13;
+                    datasheet(i,5) = hour;   
+                elseif x<=5/12
+                    hour = 14;
+                    datasheet(i,5) = hour;
+                elseif x<=6/12
+                    hour = 15;
+                    datasheet(i,5) = hour;
+                elseif y<=7/12
+                    hour = 16;
+                    datasheet(i,5) = hour;
+                elseif y<=8/12
+                    hour = 17;
+                    datasheet(i,5) = hour;
+                elseif y<=9/12
+                    hour = 18;
+                    datasheet(i,5) = hour;
+                elseif y<=10/12
+                    hour = 19;
+                    datasheet(i,5) = hour;
+                elseif y<=11/12
+                    hour = 20;
+                    datasheet(i,5) = hour;
+                else
+                    hour = 21;
+                    datasheet(i,5) = hour;
+                end                
+            end
+            
+            %column4 TOA Minutes
+            for i = 1:vehicle_num
+                x = rand();
+                toa_min = ceil(x*60);
+                if(toa_min == 60)
+                    toa_min = 0;
+                end
+                datasheet(i,4) = toa_min;
+            end
+            
+            %column6 TOD Minutes
+            for i = 1:vehicle_num
+                x = rand();
+                tod_min = ceil(x*60);
+                
+                %if hours are same between arrival and departure
+                
+                if(datasheet(i,3) == datasheet(i,5))
+                    while tod_min <= datasheet(i,4)
+                        tod_min = datasheet(i,4)+1;       
+                    end
+                    datasheet(i,6) = tod_min;    
+                else 
+                    datasheet(i,6) = tod_min;
+                end
+        
+            end 
+            
+            
+            %column7 charge decision
+            for i = 1:vehicle_num
+                x = rand();
+                if x<=0.5
+                    datasheet(i,7) = 0;
+                else
+                    datasheet(i,7) = 1;
+                end
+            end
+            
+            %column8 empty capacity
+            for i = 1:vehicle_num
+                
+                %Electric Vehicles in Turkey
+                
+                %Tesla Average Battery Capacity 84.7 kWh
+                %Tesla Model3 - 54kWh
+                %Tesla ModelS - 100kWh
+                %Tesla ModelX - 100kWh
+  
+                %Renault Average Battery Capacity 47.41 kWh
+                %Renault Twizy - 6.1kWh - %10
+                %Renault ZOE - 52kWh - %90
+                
+                %Mercedes Average Battery Capacity 80 kWh
+                %Mercedes EQC - 80kWh
+                
+                %BMW Average Battery Capacity 42.2 kWh
+                %BMW i3 - 42.2kWh
+                
+                if datasheet(i,2) == 1
+                    %TESLA%
+                    SOC = datasheet(i,1);
+                    capacity = 84.7;
+                    
+                    empty_capacity = ((100-SOC)/100)*capacity; %kWh
+                    datasheet(i,8) = empty_capacity;
+                   
+                elseif datasheet(i,2) == 2
+                    %Renault%
+                    SOC = datasheet(i,1);
+                    capacity = 47.41;
+                    
+                    empty_capacity = ((100-SOC)/100)*capacity; %kWh
+                    datasheet(i,8) = empty_capacity;
+                    
+                elseif datasheet(i,2) == 3
+                    %Mercedes%
+                    SOC = datasheet(i,1);
+                    capacity = 80;
+                    
+                    empty_capacity = ((100-SOC)/100)*capacity; %kWh
+                    datasheet(i,8) = empty_capacity;
+                    
+                elseif datasheet(i,2) == 4
+                    %BMW%
+                    SOC = datasheet(i,1);
+                    capacity = 42.2;
+                    
+                    empty_capacity = ((100-SOC)/100)*capacity; %kWh
+                    datasheet(i,8) = empty_capacity;
+                                        
+                end
+                
+            end
+            
+            %column9 charge duration
+            %Zorlu Enerji Sistemleri Prices
+            %7.4kW = 0.49TL
+            %7.4-11kw - 9.2kW = 0.77TL
+            %11kW = 1.05TL
+            %50kW = 3.2TL
+            %50-90kW - 70kW = 5.3TL
+            %90kW = 7.1TL
+            %Total Average Charge kW With Same Disturbution = 39.6kW
+            %Total Average Price With Same Disturbution = 2.98TL
+            
+            avg_kw = 39.6;
+            avg_price = 2.98;
+            
+            %column9 charge duration
+            %column10 price
+            for i = 1:vehicle_num
+                datasheet(i,9) = datasheet(i,8)/avg_kw;
+                datasheet(i,10) = datasheet(i,9)*avg_price*60;
+            end
+            %column11 average revenue from 1 to 20 charging stations
+            for i = 1:20
+                mean_val = mean(datasheet(:,9));
+                datasheet(i,11) = i * mean_val;
+            end
+            
+            path_name = 'EE101_TP4_';
+            date_time = datestr(datetime);
+            
+            
+            full_path = strtrim(append(path_name,date_time,'.xlsx'));
+            %full_path = erase(full_path," ");
+            full_path = strrep(full_path,' ','_');
+            
+            full_path = strrep(full_path,':','_');
+            
+            writematrix(datasheet,full_path)
+            
+            %PLOT SOC
+            histogram(app.UIAxes_3,datasheet(:,1));
+            %PLOT CHART TIME OF ARRIVAL
+            histogram(app.UIAxes,datasheet(:,3));
+            %PLOT CHART TIME OF DEPARTURE
+            histogram(app.UIAxes_5,datasheet(:,5));
+            %PLOT CHART BRAND ID
+            histogram(app.UIAxes_2,datasheet(:,2));
+            %PLOT CHART REVENUE
+            histogram(app.UIAxes_4,datasheet(1:20,11));
+            
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Position = [100 100 1087 679];
+            app.UIFigure.Name = 'MATLAB App';
+
+            % Create CalculateEVChargingStationDataButton
+            app.CalculateEVChargingStationDataButton = uibutton(app.UIFigure, 'push');
+            app.CalculateEVChargingStationDataButton.ButtonPushedFcn = createCallbackFcn(app, @CalculateEVChargingStationDataButtonPushed, true);
+            app.CalculateEVChargingStationDataButton.FontSize = 20;
+            app.CalculateEVChargingStationDataButton.FontWeight = 'bold';
+            app.CalculateEVChargingStationDataButton.Position = [764 391 271 54];
+            app.CalculateEVChargingStationDataButton.Text = {'Calculate EV Charging'; 'Station Data'};
+
+            % Create EE101TermProject4Label
+            app.EE101TermProject4Label = uilabel(app.UIFigure);
+            app.EE101TermProject4Label.FontSize = 30;
+            app.EE101TermProject4Label.FontWeight = 'bold';
+            app.EE101TermProject4Label.Position = [22 620 314 36];
+            app.EE101TermProject4Label.Text = 'EE101 Term Project 4';
+
+            % Create GumuscuConsultancyAgencyLabel
+            app.GumuscuConsultancyAgencyLabel = uilabel(app.UIFigure);
+            app.GumuscuConsultancyAgencyLabel.FontSize = 25;
+            app.GumuscuConsultancyAgencyLabel.Position = [22 572 352 31];
+            app.GumuscuConsultancyAgencyLabel.Text = 'Gumuscu Consultancy Agency';
+
+            % Create Image
+            app.Image = uiimage(app.UIFigure);
+            app.Image.Position = [965 572 97 88];
+            app.Image.ImageSource = 'leaf.png';
+
+            % Create UIAxes
+            app.UIAxes = uiaxes(app.UIFigure);
+            title(app.UIAxes, 'Chart Time Of Arrival')
+            xlabel(app.UIAxes, 'Hour')
+            ylabel(app.UIAxes, 'Number of Vehicles')
+            zlabel(app.UIAxes, 'Z')
+            app.UIAxes.PlotBoxAspectRatio = [1.67582417582418 1 1];
+            app.UIAxes.Position = [22 300 352 236];
+
+            % Create UIAxes_2
+            app.UIAxes_2 = uiaxes(app.UIFigure);
+            title(app.UIAxes_2, 'Number Of Vehicles By Brand')
+            xlabel(app.UIAxes_2, 'TESLA-RENAULT-MERCEDES-BMW')
+            ylabel(app.UIAxes_2, 'Number of Vehicles')
+            zlabel(app.UIAxes_2, 'Z')
+            app.UIAxes_2.Position = [373 48 352 236];
+
+            % Create UIAxes_3
+            app.UIAxes_3 = uiaxes(app.UIFigure);
+            title(app.UIAxes_3, 'Vehicles Of State Of Charge')
+            xlabel(app.UIAxes_3, 'State of Charge')
+            ylabel(app.UIAxes_3, 'Number of Vehicles')
+            zlabel(app.UIAxes_3, 'Z')
+            app.UIAxes_3.Position = [373 300 352 236];
+
+            % Create UIAxes_4
+            app.UIAxes_4 = uiaxes(app.UIFigure);
+            title(app.UIAxes_4, {'Average Revenue By Average Price '; ' Charging Station 1 to 20'})
+            xlabel(app.UIAxes_4, 'Station Number')
+            ylabel(app.UIAxes_4, 'Revenue')
+            zlabel(app.UIAxes_4, 'Z')
+            app.UIAxes_4.Position = [724 48 352 236];
+
+            % Create UIAxes_5
+            app.UIAxes_5 = uiaxes(app.UIFigure);
+            title(app.UIAxes_5, 'Chart Time Of Departure')
+            xlabel(app.UIAxes_5, 'Hour')
+            ylabel(app.UIAxes_5, 'Number of Vehicles')
+            zlabel(app.UIAxes_5, 'Z')
+            app.UIAxes_5.PlotBoxAspectRatio = [1.67582417582418 1 1];
+            app.UIAxes_5.Position = [22 48 352 236];
+
+            % Show the figure after all components are created
+            app.UIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = TERMPROJECT4
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end
